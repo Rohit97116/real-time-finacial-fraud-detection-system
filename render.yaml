@@ -1,6 +1,6 @@
 ﻿services:
   - type: web
-    name: fraudlens-ai
+    name: fraudlens-ai-rohit97116
     runtime: docker
     plan: free
     autoDeploy: true
