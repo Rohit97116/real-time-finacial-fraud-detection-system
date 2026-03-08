@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520">
+  <defs>
+    <linearGradient id="bg2" x1="0" x2="1">
+      <stop offset="0%" stop-color="#132a5d"/>
+      <stop offset="100%" stop-color="#0f1f46"/>
+    </linearGradient>
+    <linearGradient id="monitor" x1="0" x2="1">
+      <stop offset="0%" stop-color="#43e9f4"/>
+      <stop offset="100%" stop-color="#58c9ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="860" height="520" rx="22" fill="url(#bg2)"/>
+  <g opacity="0.42" stroke="#5ae9ff" stroke-width="2">
+    <path d="M60 120h100v-60"/>
+    <path d="M780 120h-100v-60"/>
+    <path d="M70 430h140v40"/>
+    <path d="M800 430h-120v40"/>
+  </g>
+  <rect x="210" y="110" width="450" height="260" rx="22" fill="url(#monitor)"/>
+  <rect x="264" y="152" width="150" height="84" rx="8" fill="#2e3e7e" opacity="0.88"/>
+  <rect x="434" y="152" width="184" height="160" rx="10" fill="#f2f6ff" opacity="0.95"/>
+  <rect x="238" y="394" width="398" height="24" rx="12" fill="#657fbe"/>
+  <rect x="360" y="352" width="154" height="48" rx="10" fill="#8097cf"/>
+  <path d="M128 256c0-38 31-69 69-69h14c38 0 69 31 69 69v24h-152z" fill="#4de0ff" opacity="0.24"/>
+  <rect x="158" y="280" width="94" height="84" rx="16" fill="#41d9ff" opacity="0.3"/>
+  <circle cx="205" cy="322" r="18" fill="#0c1f45"/>
+  <rect x="200" y="218" width="10" height="26" rx="5" fill="#43e9f4"/>
+  <path d="M198 230c0-22 16-40 36-40s36 18 36 40" fill="none" stroke="#43e9f4" stroke-width="8"/>
+</svg>

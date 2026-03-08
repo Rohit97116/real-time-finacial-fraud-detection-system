@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Analysis Mode</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span class="brand-text">FraudLens AI</span>
+            </div>
+            <div class="actions" style="margin-top:0;">
+                <a class="btn secondary star-border" href="{{ url_for('history') }}">History</a>
+                <a class="btn secondary star-border" href="{{ url_for('welcome') }}">Home</a>
+            </div>
+        </header>
+
+        <section class="hero star-border">
+            <h2>Select Analysis Type</h2>
+            <p>Choose how you want to evaluate transactions: a single month, multiple statement files, or a combined report from previous history.</p>
+        </section>
+
+        <section class="mode-grid">
+            <article class="mode-card star-border">
+                <h3>Single-Month Analysis</h3>
+                <p>Upload one statement and select its month. You can also optionally merge this run with customer history months in the same analysis.</p>
+                <a class="btn star-border" href="{{ url_for('details_single') }}">Continue</a>
+            </article>
+
+            <article class="mode-card star-border" style="--star-speed: 5.8s;">
+                <h3>Multiple-Month Analysis</h3>
+                <p>Upload multiple statement PDFs in one run for consolidated analysis, with an optional history merge for deeper multi-month coverage.</p>
+                <a class="btn star-border" href="{{ url_for('details_multi') }}">Continue</a>
+            </article>
+
+            <article class="mode-card star-border" style="--star-speed: 6.4s;">
+                <h3>Previous Combined Analysis</h3>
+                <p>Select customer name and months. The system combines available historical month reports and informs you about missing months.</p>
+                <a class="btn star-border" href="{{ url_for('details_previous') }}">Continue</a>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

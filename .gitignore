@@ -1,0 +1,14 @@
+﻿venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+.env
+.env.*
+uploads/
+reports/
+models/
+data/analysis_history.json
+.DS_Store
+Thumbs.db

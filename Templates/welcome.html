@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Fraud Detection System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span class="brand-text">FraudLens AI</span>
+            </div>
+            <span class="ok-badge">ML Powered Platform</span>
+        </header>
+
+        <section class="hero-split star-border">
+            <article class="hero hero-copy">
+                <h1>Introducing <span class="headline-accent">Fraud Detection Pro</span></h1>
+                <p>A modern, profile-aware system for transaction risk analysis, suspicious behavior detection, and report-driven decision support.</p>
+                <div class="actions">
+                    <a class="btn star-border" href="{{ url_for('details') }}">Start Analysis</a>
+                    <a class="btn secondary star-border" href="{{ url_for('details_previous') }}">Previous Combined Analysis</a>
+                    <a class="btn secondary star-border" href="{{ url_for('history') }}">View Analysis History</a>
+                </div>
+            </article>
+
+            <aside class="hero-visual star-border" style="--star-speed: 5.5s;">
+                <img src="{{ url_for('static', filename='img/fraud-hero.svg') }}" alt="Fraud detection visual">
+                <div class="float-card status-1">
+                    <div class="title">Latest Review</div>
+                    <div class="value">$256.89</div>
+                    <div class="float-badge">Flagged</div>
+                </div>
+                <div class="float-card status-2">
+                    <div class="title">Verified Transaction</div>
+                    <div class="value">$175.49</div>
+                    <div class="float-badge">Captured</div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="grid-3">
+            <article class="card star-border">
+                <h3>Adaptive Risk Intelligence</h3>
+                <p>Model outputs are combined with behavioral indicators to reduce noise and surface high-value anomalies.</p>
+            </article>
+            <article class="card star-border" style="--star-speed: 6s;">
+                <h3>Structured Statement Parsing</h3>
+                <p>Bank statement entries are normalized into searchable records with traceable risk reasons.</p>
+            </article>
+            <article class="card star-border" style="--star-speed: 4.8s;">
+                <h3>Visual and Exportable Reporting</h3>
+                <p>Access tabular findings, interactive charts, and downloadable CSV/PDF outputs from every completed run.</p>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

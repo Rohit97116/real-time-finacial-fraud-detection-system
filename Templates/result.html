@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Analysis Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span class="brand-text">FraudLens AI</span>
+            </div>
+            <div class="actions" style="margin-top:0;">
+                <a class="btn secondary star-border" href="{{ url_for('history') }}">History</a>
+                <a class="btn secondary star-border" href="{{ url_for('details') }}">New Analysis</a>
+            </div>
+        </header>
+
+        <section class="hero-split star-border">
+            <article class="hero hero-copy">
+                <h1>Analysis Completed for <span class="headline-accent">{{ customer_name }}</span></h1>
+                <p>Review flagged records, explore full serial-order transaction data, and open the visual report for chart-based insights.</p>
+                {% if analysis_mode_label %}
+                <p class="subtle"><strong>Mode:</strong> {{ analysis_mode_label }}</p>
+                {% endif %}
+                {% if analysis_scope %}
+                <p class="subtle"><strong>Scope:</strong> {{ analysis_scope }}</p>
+                {% endif %}
+                {% if analysis_notes %}
+                <ul class="notice-list">
+                    {% for note in analysis_notes %}
+                    <li class="notice-item">{{ note }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="actions">
+                    <a class="btn star-border" href="{{ url_for('report_dashboard', filename=csv_file, pdf=pdf_file, customer=customer_name) }}">Open Visual Report</a>
+                    <a class="btn secondary star-border" href="{{ url_for('download_report', filename=csv_file) }}">Download CSV</a>
+                    <a class="btn secondary star-border" href="{{ url_for('download_report', filename=pdf_file) }}">Download PDF</a>
+                </div>
+            </article>
+
+            <aside class="hero-visual star-border" style="--star-speed: 5.8s;">
+                <img src="{{ url_for('static', filename='img/security-dashboard.svg') }}" alt="Analysis summary visual">
+                <div class="float-card status-1">
+                    <div class="title">Flagged Transactions</div>
+                    <div class="value">{{ summary.flagged_txn }}</div>
+                    <div class="float-badge">Priority Review</div>
+                </div>
+                <div class="float-card status-2">
+                    <div class="title">Average Risk Score</div>
+                    <div class="value">{{ summary.avg_risk }}</div>
+                    <div class="float-badge">Model Output</div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="summary-grid">
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Total Transactions</div>
+                <div class="kpi-value">{{ summary.total_txn }}</div>
+            </article>
+            <article class="kpi-card star-border" style="--star-speed: 6.6s;">
+                <div class="kpi-label">Flagged Transactions</div>
+                <div class="kpi-value">{{ summary.flagged_txn }}</div>
+            </article>
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Total Debit</div>
+                <div class="kpi-value compact">{{ summary.total_debit }}</div>
+            </article>
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Total Credit</div>
+                <div class="kpi-value compact">{{ summary.total_credit }}</div>
+            </article>
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Average Risk Score</div>
+                <div class="kpi-value">{{ summary.avg_risk }}</div>
+            </article>
+        </section>
+
+        <h3 class="section-title">Flagged Transactions</h3>
+        <section class="table-wrap star-border">
+            {% if flagged_transactions %}
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                        <th>{{ col | replace('_', ' ') | title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in flagged_transactions %}
+                    <tr class="flagged-row">
+                        {% for col in columns %}
+                        <td>{{ row[col] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-note">No flagged transactions found in this statement.</div>
+            {% endif %}
+        </section>
+
+        <h3 class="section-title">All Transactions (Serial Order)</h3>
+        <section class="table-wrap star-border" style="--star-speed: 7s;">
+            <div class="table-tools">
+                <input id="allTxSearch" class="search-input star-border" type="text" placeholder="Search by serial number, date, description, channel, amount, or reason">
+                <label class="subtle">
+                    Rows per page:
+                    <select id="allTxPageSize" class="rows-select star-border">
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </label>
+                <span id="allTxCount" class="subtle"></span>
+            </div>
+
+            <table class="result-table" id="allTxTable">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                        <th>{{ col | replace('_', ' ') | title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="allTxBody">
+                    {% for row in all_transactions %}
+                    <tr class="{% if row['fraud_flag'] == 'Flagged' %}flagged-row{% endif %}">
+                        {% for col in columns %}
+                        <td>{{ row[col] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div id="allTxEmpty" class="empty-note" style="display:none; margin-top:10px;">No transactions match the current search filter.</div>
+            <div class="pager">
+                <button id="allTxPrev" class="pager-btn star-border" type="button">Previous</button>
+                <span id="allTxPageInfo" class="subtle"></span>
+                <button id="allTxNext" class="pager-btn star-border" type="button">Next</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            const table = document.getElementById("allTxTable");
+            const tbody = document.getElementById("allTxBody");
+            const search = document.getElementById("allTxSearch");
+            const pageSizeSelect = document.getElementById("allTxPageSize");
+            const countText = document.getElementById("allTxCount");
+            const pageInfo = document.getElementById("allTxPageInfo");
+            const prevBtn = document.getElementById("allTxPrev");
+            const nextBtn = document.getElementById("allTxNext");
+            const emptyNote = document.getElementById("allTxEmpty");
+
+            if (!table || !tbody) {
+                return;
+            }
+
+            const allRows = Array.from(tbody.querySelectorAll("tr"));
+            let filteredRows = allRows.slice();
+            let currentPage = 1;
+            let pageSize = parseInt(pageSizeSelect.value, 10) || 25;
+
+            function renderTable() {
+                const totalMatches = filteredRows.length;
+                const totalPages = Math.max(1, Math.ceil(totalMatches / pageSize));
+                currentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+                allRows.forEach((row) => {
+                    row.style.display = "none";
+                });
+
+                const start = (currentPage - 1) * pageSize;
+                const end = start + pageSize;
+                const visibleRows = filteredRows.slice(start, end);
+                visibleRows.forEach((row) => {
+                    row.style.display = "";
+                });
+
+                const showingFrom = totalMatches === 0 ? 0 : start + 1;
+                const showingTo = totalMatches === 0 ? 0 : Math.min(end, totalMatches);
+
+                countText.textContent = "Showing " + showingFrom + "-" + showingTo + " of " + totalMatches;
+                pageInfo.textContent = "Page " + currentPage + " of " + totalPages;
+                prevBtn.disabled = currentPage <= 1;
+                nextBtn.disabled = currentPage >= totalPages;
+
+                if (totalMatches === 0) {
+                    table.style.display = "none";
+                    emptyNote.style.display = "block";
+                } else {
+                    table.style.display = "table";
+                    emptyNote.style.display = "none";
+                }
+            }
+
+            function applyFilter() {
+                const term = (search.value || "").toLowerCase().trim();
+                if (!term) {
+                    filteredRows = allRows.slice();
+                } else {
+                    filteredRows = allRows.filter((row) => row.textContent.toLowerCase().includes(term));
+                }
+                currentPage = 1;
+                renderTable();
+            }
+
+            search.addEventListener("input", applyFilter);
+            pageSizeSelect.addEventListener("change", function () {
+                pageSize = parseInt(pageSizeSelect.value, 10) || 25;
+                currentPage = 1;
+                renderTable();
+            });
+            prevBtn.addEventListener("click", function () {
+                if (currentPage > 1) {
+                    currentPage -= 1;
+                    renderTable();
+                }
+            });
+            nextBtn.addEventListener("click", function () {
+                const totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+                if (currentPage < totalPages) {
+                    currentPage += 1;
+                    renderTable();
+                }
+            });
+
+            renderTable();
+        })();
+    </script>
+</body>
+</html>

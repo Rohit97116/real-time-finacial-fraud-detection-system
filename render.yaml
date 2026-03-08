@@ -1,0 +1,10 @@
+﻿services:
+  - type: web
+    name: fraudlens-ai
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true

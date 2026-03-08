@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span>FraudLens AI</span>
+            </div>
+            <div class="actions" style="margin-top:0;">
+                <a class="btn secondary star-border" href="{{ url_for('details') }}">New Analysis</a>
+                <a class="btn secondary star-border" href="{{ url_for('welcome') }}">Home</a>
+            </div>
+        </header>
+
+        <section class="hero star-border">
+            <h2>Analysis History</h2>
+            <p>Review previous analysis records and download historical CSV or PDF reports at any time.</p>
+        </section>
+
+        <section class="table-wrap star-border">
+            {% if history_rows %}
+            <table class="result-table history-table">
+                <thead>
+                    <tr>
+                        <th>Analysis Date</th>
+                        <th>Customer</th>
+                        <th>Statement File</th>
+                        <th>Total Transactions</th>
+                        <th>Flagged Transactions</th>
+                        <th>Total Debit</th>
+                        <th>Total Credit</th>
+                        <th>Average Risk</th>
+                        <th>Analysis Mode</th>
+                        <th>Months</th>
+                        <th>Visual Report</th>
+                        <th>CSV Report</th>
+                        <th>PDF Report</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in history_rows %}
+                    <tr>
+                        <td>{{ row.analyzed_at }}</td>
+                        <td>{{ row.customer_name }}</td>
+                        <td>{{ row.source_statement }}</td>
+                        <td>{{ row.total_txn }}</td>
+                        <td>{{ row.flagged_txn }}</td>
+                        <td>{{ row.total_debit_fmt }}</td>
+                        <td>{{ row.total_credit_fmt }}</td>
+                        <td>{{ row.avg_risk_fmt }}</td>
+                        <td>{{ row.analysis_mode_label }}</td>
+                        <td>{{ row.months_display }}</td>
+                        <td>
+                            {% if row.csv_available %}
+                            <a class="btn secondary star-border history-action-btn" href="{{ url_for('report_dashboard', filename=row.csv_file, pdf=row.pdf_file, customer=row.customer_name) }}">Open Report</a>
+                            {% else %}
+                            <span class="subtle">Unavailable</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.csv_available %}
+                            <a class="btn secondary star-border history-action-btn" href="{{ url_for('download_report', filename=row.csv_file) }}">Download CSV</a>
+                            {% else %}
+                            <span class="subtle">Unavailable</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.pdf_available %}
+                            <a class="btn secondary star-border history-action-btn" href="{{ url_for('download_report', filename=row.pdf_file) }}">Download PDF</a>
+                            {% else %}
+                            <span class="subtle">Unavailable</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-note">No previous analysis records are available yet.</div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

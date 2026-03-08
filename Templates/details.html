@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span class="brand-text">FraudLens AI</span>
+            </div>
+            <div class="actions" style="margin-top:0;">
+                <a class="btn secondary star-border" href="{{ url_for('history') }}">History</a>
+                <a class="btn secondary star-border" href="{{ url_for('welcome') }}">Home</a>
+            </div>
+        </header>
+
+        <section class="split-layout">
+            <article class="side-panel star-border">
+                <div>
+                    <h3>Secure Fraud Assessment Workflow</h3>
+                    <p>Provide customer context and upload a statement PDF to run a full anomaly analysis and downloadable reporting workflow.</p>
+
+                    <div class="side-points">
+                        <div class="side-point"><span class="point-dot"></span>Profile-aware scoring for better context</div>
+                        <div class="side-point"><span class="point-dot"></span>Transaction-level risk reasons and flags</div>
+                        <div class="side-point"><span class="point-dot"></span>History tracking with downloadable outputs</div>
+                    </div>
+                </div>
+                <div class="illustration-wrap">
+                    <img src="{{ url_for('static', filename='img/security-dashboard.svg') }}" alt="Security dashboard illustration">
+                </div>
+            </article>
+
+            <article class="form-card star-border" style="--star-speed: 5.2s;">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul class="flash-list">
+                    {% for msg in messages %}
+                    <li class="flash-item star-border">{{ msg }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="field star-border">
+                            <label for="name">Customer Name</label>
+                            <input id="name" type="text" name="name" required>
+                        </div>
+
+                        <div class="field star-border">
+                            <label for="income">Monthly Income (INR)</label>
+                            <input id="income" type="number" step="0.01" name="income" required>
+                        </div>
+
+                        <div class="field star-border" style="--star-speed: 6.8s;">
+                            <label for="savings">Savings (INR)</label>
+                            <input id="savings" type="number" step="0.01" name="savings" required>
+                        </div>
+
+                        <div class="field star-border" style="--star-speed: 4.6s;">
+                            <label for="avg_daily">Average Daily Spend (INR)</label>
+                            <input id="avg_daily" type="number" step="0.01" name="avg_daily" required>
+                        </div>
+
+                        <div class="field star-border">
+                            <label for="avg_weekly">Average Weekly Spend (INR)</label>
+                            <input id="avg_weekly" type="number" step="0.01" name="avg_weekly" required>
+                        </div>
+
+                        <div class="field star-border">
+                            <label for="avg_weekend">Average Weekend Spend (INR)</label>
+                            <input id="avg_weekend" type="number" step="0.01" name="avg_weekend" required>
+                        </div>
+
+                        <div class="field star-border">
+                            <label for="avg_monthly">Average Monthly Spend (INR)</label>
+                            <input id="avg_monthly" type="number" step="0.01" name="avg_monthly" required>
+                        </div>
+
+                        <div class="field star-border">
+                            <label for="statement">Upload Bank Statement (PDF)</label>
+                            <input id="statement" type="file" name="statement" accept=".pdf" required>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button type="submit" class="btn star-border">Run Fraud Analysis</button>
+                        <a class="btn secondary star-border" href="{{ url_for('welcome') }}">Cancel</a>
+                    </div>
+                </form>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

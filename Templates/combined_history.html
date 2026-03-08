@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Combined Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span class="brand-text">FraudLens AI</span>
+            </div>
+            <div class="actions" style="margin-top:0;">
+                <a class="btn secondary star-border" href="{{ url_for('details') }}">Change Mode</a>
+                <a class="btn secondary star-border" href="{{ url_for('history') }}">History</a>
+            </div>
+        </header>
+
+        <section class="hero star-border">
+            <h2>Previous Transactions Combined Analysis</h2>
+            <p>Enter the customer name and months to merge historical reports. If any month is unavailable, the system skips it and clearly informs you in the result.</p>
+        </section>
+
+        <section class="grid-2">
+            <article class="card star-border">
+                <h3>How to Use</h3>
+                <p>Provide month values in <code>YYYY-MM</code> format, separated by commas. Example: <code>2026-01, 2026-02, 2026-03</code>.</p>
+                <div class="hint-list">
+                    <div class="side-point"><span class="point-dot"></span>Latest matching history entry is used for each month</div>
+                    <div class="side-point"><span class="point-dot"></span>Missing months are reported clearly</div>
+                    <div class="side-point"><span class="point-dot"></span>Combined output supports CSV, PDF and visual charts</div>
+                </div>
+            </article>
+
+            <article class="form-card star-border">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul class="flash-list">
+                    {% for msg in messages %}
+                    <li class="flash-item star-border">{{ msg }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('analyze_previous') }}" method="POST">
+                    <div class="form-grid one-col">
+                        <div class="field star-border">
+                            <label for="customer_name">Customer Name</label>
+                            <input id="customer_name" type="text" name="customer_name" list="customerOptions" required>
+                            <datalist id="customerOptions">
+                                {% for customer in customer_options %}
+                                <option value="{{ customer }}"></option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <div class="field star-border">
+                            <label for="months">Months (comma separated, YYYY-MM)</label>
+                            <input id="months" type="text" name="months" placeholder="2026-01, 2026-02, 2026-03" required>
+                        </div>
+                    </div>
+
+                    {% if month_options %}
+                    <p class="hint">Available months in history: {{ month_options | join(', ') }}</p>
+                    {% endif %}
+
+                    <div class="actions">
+                        <button type="submit" class="btn star-border">Generate Combined Analysis</button>
+                        <a class="btn secondary star-border" href="{{ url_for('details') }}">Back</a>
+                    </div>
+                </form>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

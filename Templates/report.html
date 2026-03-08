@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+        .chart-card {
+            padding: 14px;
+        }
+        .chart-card h3 {
+            margin: 0 0 8px;
+            font-family: "Space Grotesk", sans-serif;
+        }
+        .chart-canvas-wrap {
+            height: 320px;
+        }
+        .chart-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .chart-actions .btn {
+            padding: 7px 12px;
+        }
+        @media (max-width: 980px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-canvas-wrap {
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span>FraudLens AI</span>
+            </div>
+            <div class="actions" style="margin-top:0;">
+                <a class="btn secondary star-border" href="{{ url_for('details') }}">New Analysis</a>
+                <a class="btn secondary star-border" href="{{ url_for('history') }}">History</a>
+            </div>
+        </header>
+
+        <section class="hero star-border">
+            <h2>Interactive Data Report</h2>
+            <p><strong>Customer:</strong> {{ customer_name }}</p>
+            <p class="subtle">Explore channel mix, risk distribution, and transaction amount spread using interactive charts.</p>
+        </section>
+
+        <section class="summary-grid">
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Total Transactions</div>
+                <div class="kpi-value">{{ summary.total_txn }}</div>
+            </article>
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Flagged Transactions</div>
+                <div class="kpi-value">{{ summary.flagged_txn }}</div>
+            </article>
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Total Debit</div>
+                <div class="kpi-value compact">{{ summary.total_debit }}</div>
+            </article>
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Total Credit</div>
+                <div class="kpi-value compact">{{ summary.total_credit }}</div>
+            </article>
+            <article class="kpi-card star-border">
+                <div class="kpi-label">Average Risk Score</div>
+                <div class="kpi-value">{{ summary.avg_risk }}</div>
+            </article>
+        </section>
+
+        <section class="chart-grid">
+            <article class="chart-card star-border">
+                <h3>Channel Distribution (Pie Chart)</h3>
+                <div class="chart-canvas-wrap">
+                    <canvas id="channelPie"></canvas>
+                </div>
+                <div class="chart-actions">
+                    <button class="btn secondary star-border" type="button" onclick="downloadChart('channelPie', 'channel-distribution')">Download PNG</button>
+                </div>
+            </article>
+
+            <article class="chart-card star-border">
+                <h3>Risk Level Profile (Bar Chart)</h3>
+                <div class="chart-canvas-wrap">
+                    <canvas id="riskBar"></canvas>
+                </div>
+                <div class="chart-actions">
+                    <button class="btn secondary star-border" type="button" onclick="downloadChart('riskBar', 'risk-profile')">Download PNG</button>
+                </div>
+            </article>
+
+            <article class="chart-card star-border" style="grid-column: 1 / -1;">
+                <h3>Transaction Amount Frequency (Histogram)</h3>
+                <div class="chart-canvas-wrap">
+                    <canvas id="amountHist"></canvas>
+                </div>
+                <div class="chart-actions">
+                    <button class="btn secondary star-border" type="button" onclick="downloadChart('amountHist', 'amount-histogram')">Download PNG</button>
+                </div>
+            </article>
+        </section>
+
+        <div class="actions">
+            <a class="btn star-border" href="{{ url_for('download_report', filename=csv_file) }}">Download CSV Report</a>
+            {% if pdf_file %}
+            <a class="btn star-border" href="{{ url_for('download_report', filename=pdf_file) }}">Download PDF Report</a>
+            {% endif %}
+            <a class="btn secondary star-border" href="{{ url_for('report_dashboard', filename=csv_file, pdf=pdf_file, customer=customer_name) }}">Refresh Report</a>
+        </div>
+    </main>
+
+    <script>
+        const chartData = {{ chart_data | safe }};
+
+        function makeHistogram(values, binCount) {
+            if (!values || values.length === 0) {
+                return { labels: [], counts: [] };
+            }
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+            const spread = max - min;
+            const width = spread === 0 ? 1 : spread / binCount;
+
+            const counts = Array(binCount).fill(0);
+            const labels = [];
+            for (let i = 0; i < binCount; i++) {
+                const start = min + i * width;
+                const end = i === binCount - 1 ? max : start + width;
+                labels.push(start.toFixed(0) + " - " + end.toFixed(0));
+            }
+
+            values.forEach((value) => {
+                let idx = Math.floor((value - min) / width);
+                if (idx >= binCount) {
+                    idx = binCount - 1;
+                }
+                if (idx < 0) {
+                    idx = 0;
+                }
+                counts[idx] += 1;
+            });
+            return { labels, counts };
+        }
+
+        function downloadChart(canvasId, fileName) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = fileName + ".png";
+            link.click();
+        }
+
+        const pieCtx = document.getElementById("channelPie");
+        const barCtx = document.getElementById("riskBar");
+        const histCtx = document.getElementById("amountHist");
+
+        new Chart(pieCtx, {
+            type: "pie",
+            data: {
+                labels: chartData.channel_labels,
+                datasets: [{
+                    data: chartData.channel_values,
+                    backgroundColor: [
+                        "rgba(89, 214, 255, 0.78)",
+                        "rgba(126, 139, 255, 0.78)",
+                        "rgba(255, 77, 200, 0.78)",
+                        "rgba(108, 232, 170, 0.78)",
+                        "rgba(255, 180, 84, 0.78)",
+                        "rgba(244, 99, 146, 0.78)"
+                    ],
+                    borderColor: "rgba(8, 14, 28, 0.9)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: "#dbe6ff" }
+                    }
+                }
+            }
+        });
+
+        new Chart(barCtx, {
+            type: "bar",
+            data: {
+                labels: chartData.risk_labels,
+                datasets: [{
+                    label: "Transactions",
+                    data: chartData.risk_values,
+                    backgroundColor: "rgba(126, 139, 255, 0.78)",
+                    borderColor: "rgba(89, 214, 255, 0.95)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: { color: "#dbe6ff" },
+                        grid: { color: "rgba(124, 150, 219, 0.16)" }
+                    },
+                    y: {
+                        ticks: { color: "#dbe6ff" },
+                        grid: { color: "rgba(124, 150, 219, 0.16)" },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: "#dbe6ff" }
+                    }
+                }
+            }
+        });
+
+        const hist = makeHistogram(chartData.amount_values, 12);
+        new Chart(histCtx, {
+            type: "bar",
+            data: {
+                labels: hist.labels,
+                datasets: [{
+                    label: "Frequency",
+                    data: hist.counts,
+                    backgroundColor: "rgba(255, 77, 200, 0.42)",
+                    borderColor: "rgba(255, 77, 200, 0.95)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: { color: "#dbe6ff", maxRotation: 0, autoSkip: true },
+                        grid: { color: "rgba(124, 150, 219, 0.16)" }
+                    },
+                    y: {
+                        ticks: { color: "#dbe6ff" },
+                        grid: { color: "rgba(124, 150, 219, 0.16)" },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: "#dbe6ff" }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
