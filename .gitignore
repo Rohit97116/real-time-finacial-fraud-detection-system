@@ -7,8 +7,10 @@ __pycache__/
 .env
 .env.*
 uploads/
-reports/
-models/
+reports/*
+!reports/__init__.py
+models/*
+!models/__init__.py
 data/analysis_history.json
 .DS_Store
 Thumbs.db
