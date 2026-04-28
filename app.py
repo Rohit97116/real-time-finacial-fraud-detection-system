@@ -18,6 +18,7 @@ from services.pdf_parser_service import parse_bank_statement
 app = Flask(__name__, template_folder="Templates", static_folder="statics")
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
 app.config["MAX_CONTENT_LENGTH"] = 15 * 1024 * 1024  # 15 MB
+application = app
 
 UPLOAD_FOLDER = "uploads"
 REPORT_FOLDER = "reports"
@@ -925,4 +926,4 @@ def handle_oversized_upload(_error):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
