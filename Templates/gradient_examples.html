@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Text Examples</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gradient-text.css') }}">
+    <style>
+        .example-container {
+            display: grid;
+            gap: 3rem;
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .example-section {
+            background: rgba(12, 24, 52, 0.5);
+            border: 1px solid rgba(126, 168, 255, 0.22);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+        }
+
+        .example-section h2 {
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+
+        .example-code {
+            background: rgba(6, 8, 26, 0.8);
+            border-left: 3px solid var(--accent-indigo);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            color: var(--accent-cyan);
+        }
+    </style>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span class="brand-text">Gradient Text Examples</span>
+            </div>
+        </header>
+
+        <div class="example-container">
+            <!-- Example 1: Hero Title -->
+            <section class="example-section">
+                <h2>Hero Title</h2>
+                <h1 style="margin: 0;">
+                    Meet <span class="gradient-text" 
+                               data-colors='["#5227FF","#FF9FFC","#B497CF"]' 
+                               data-speed="8"
+                               data-auto-init="gradient-text">FraudLens AI</span>
+                </h1>
+                <div class="example-code">
+&lt;h1&gt;Meet &lt;span class="gradient-text" 
+   data-colors='["#5227FF","#FF9FFC","#B497CF"]' 
+   data-speed="8" 
+   data-auto-init="gradient-text"&gt;FraudLens AI&lt;/span&gt;
+&lt;/h1&gt;
+                </div>
+            </section>
+
+            <!-- Example 2: Feature Highlight -->
+            <section class="example-section">
+                <h2>Feature Highlight</h2>
+                <p style="margin: 0 0 1rem 0;">
+                    Experience <span class="gradient-text" 
+                                     data-colors='["#00D4FF","#0099FF","#005FFF","#00D4FF"]' 
+                                     data-speed="6"
+                                     data-direction="horizontal"
+                                     data-auto-init="gradient-text">real-time detection</span> like never before.
+                </p>
+                <div class="example-code">
+&lt;span class="gradient-text" 
+   data-colors='["#00D4FF","#0099FF","#005FFF","#00D4FF"]' 
+   data-speed="6" 
+   data-auto-init="gradient-text"&gt;real-time detection&lt;/span&gt;
+                </div>
+            </section>
+
+            <!-- Example 3: With Border -->
+            <section class="example-section">
+                <h2>With Border (Premium Style)</h2>
+                <p style="margin: 0;">
+                    <span class="gradient-text" 
+                          data-colors='["#FFD700","#FFA500","#FF8C00","#FFD700"]' 
+                          data-speed="7"
+                          data-show-border="true"
+                          data-auto-init="gradient-text">Premium Feature</span> available now
+                </p>
+                <div class="example-code">
+&lt;span class="gradient-text" 
+   data-colors='["#FFD700","#FFA500","#FF8C00","#FFD700"]' 
+   data-speed="7" 
+   data-show-border="true" 
+   data-auto-init="gradient-text"&gt;Premium Feature&lt;/span&gt;
+                </div>
+            </section>
+
+            <!-- Example 4: Pause on Hover -->
+            <section class="example-section">
+                <h2>Pause on Hover</h2>
+                <p style="margin: 0;">
+                    <span class="gradient-text" 
+                          data-colors='["#FF1493","#FF69B4","#FFB6C1","#FF1493"]' 
+                          data-speed="5"
+                          data-pause-on-hover="true"
+                          data-auto-init="gradient-text">Hover over this text</span> to pause animation
+                </p>
+                <div class="example-code">
+&lt;span class="gradient-text" 
+   data-colors='["#FF1493","#FF69B4","#FFB6C1","#FF1493"]' 
+   data-pause-on-hover="true" 
+   data-auto-init="gradient-text"&gt;Hover over this text&lt;/span&gt;
+                </div>
+            </section>
+
+            <!-- Example 5: Vertical Animation -->
+            <section class="example-section">
+                <h2>Vertical Animation</h2>
+                <p style="margin: 0; line-height: 2;">
+                    <span class="gradient-text" 
+                          data-colors='["#52FF0F","#00CC00","#00AA00","#52FF0F"]' 
+                          data-direction="vertical"
+                          data-speed="10"
+                          data-auto-init="gradient-text">Vertical Gradient</span>
+                </p>
+                <div class="example-code">
+&lt;span class="gradient-text" 
+   data-colors='["#52FF0F","#00CC00","#00AA00","#52FF0F"]' 
+   data-direction="vertical" 
+   data-speed="10" 
+   data-auto-init="gradient-text"&gt;Vertical Gradient&lt;/span&gt;
+                </div>
+            </section>
+
+            <!-- Example 6: Continuous Loop -->
+            <section class="example-section">
+                <h2>Continuous Loop (No Yoyo)</h2>
+                <p style="margin: 0;">
+                    <span class="gradient-text" 
+                          data-colors='["#00FFFF","#00FF7F","#00FFFF"]' 
+                          data-yoyo="false"
+                          data-speed="4"
+                          data-auto-init="gradient-text">Endless Animation</span> keeps moving
+                </p>
+                <div class="example-code">
+&lt;span class="gradient-text" 
+   data-colors='["#00FFFF","#00FF7F","#00FFFF"]' 
+   data-yoyo="false" 
+   data-speed="4" 
+   data-auto-init="gradient-text"&gt;Endless Animation&lt;/span&gt;
+                </div>
+            </section>
+
+            <!-- Example 7: Multiple Colors -->
+            <section class="example-section">
+                <h2>Rainbow Gradient</h2>
+                <h3 style="margin: 0; font-size: 1.3rem;">
+                    <span class="gradient-text" 
+                          data-colors='["#FF0000","#FF7F00","#FFFF00","#00FF00","#0000FF","#4B0082","#FF0000"]' 
+                          data-speed="12"
+                          data-auto-init="gradient-text">Rainbow Effect</span>
+                </h3>
+                <div class="example-code">
+&lt;span class="gradient-text" 
+   data-colors='["#FF0000","#FF7F00","#FFFF00","#00FF00","#0000FF","#4B0082","#FF0000"]' 
+   data-speed="12" 
+   data-auto-init="gradient-text"&gt;Rainbow Effect&lt;/span&gt;
+                </div>
+            </section>
+
+            <!-- Example 8: Subtitle -->
+            <section class="example-section">
+                <h2>Subtitle Application</h2>
+                <p style="margin: 0; color: var(--muted); font-size: 0.95rem;">
+                    Your transactions are <span class="gradient-text" 
+                                                data-colors='["#4DF2FF","#6F8EFF","#4DF2FF"]' 
+                                                data-speed="8"
+                                                data-auto-init="gradient-text">always protected</span> with AI-powered monitoring
+                </p>
+                <div class="example-code">
+&lt;span class="gradient-text" 
+   data-colors='["#4DF2FF","#6F8EFF","#4DF2FF"]' 
+   data-speed="8" 
+   data-auto-init="gradient-text"&gt;always protected&lt;/span&gt;
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/gradient-text.js') }}"></script>
+</body>
+</html>

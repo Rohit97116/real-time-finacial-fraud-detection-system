@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Fraud Detection System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gradient-text.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grainient.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/ogl@0.0.8/dist/ogl.umd.js"></script>
 </head>
 <body>
+    <div id="grainient-bg" class="grainient-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
     <main class="page-shell">
         <header class="topbar">
             <div class="brand">
@@ -18,7 +22,11 @@
 
         <section class="hero-split star-border">
             <article class="hero hero-copy">
-                <h1>Introducing <span class="headline-accent">Fraud Detection Pro</span></h1>
+                <h1>Introducing <span 
+                    class="gradient-text" 
+                    data-colors='["#5227FF","#FF9FFC","#B497CF"]' 
+                    data-speed="8"
+                    data-auto-init="gradient-text">Fraud Detection Pro</span></h1>
                 <p>A modern, profile-aware system for transaction risk analysis, suspicious behavior detection, and report-driven decision support.</p>
                 <div class="actions">
                     <a class="btn star-border" href="{{ url_for('details') }}">Start Analysis</a>
@@ -57,5 +65,23 @@
             </article>
         </section>
     </main>
+
+    <script src="{{ url_for('static', filename='js/gradient-text.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/grainient.js') }}"></script>
+    <script>
+        // Initialize Grainient background
+        new Grainient('#grainient-bg', {
+            color1: '#5227FF',
+            color2: '#FF9FFC',
+            color3: '#B497CF',
+            timeSpeed: 0.25,
+            warpStrength: 1,
+            warpFrequency: 5,
+            warpSpeed: 2,
+            warpAmplitude: 50,
+            grainAmount: 0.1,
+            contrast: 1.5
+        });
+    </script>
 </body>
 </html>
